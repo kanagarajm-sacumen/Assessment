@@ -1,6 +1,8 @@
 package org.sacumen.fleetAssessment;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -12,45 +14,55 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 public class FleetLogin {
-	
+
+	private static final Logger logger = Logger.getLogger(FleetLogin.class.getName());
+
 	private JSONObject mResponse;
-	
+
 	public FleetLogin() {
 		mResponse = new JSONObject();
 	}
-	
+
 	public JSONObject login() {
-		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-			
+		try {
+
+			logger.info("Login Started");
+
+			CloseableHttpClient httpClient = HttpClients.createDefault();
+
 			HttpPost httpPost = new HttpPost(FleetConstants.LOGIN_URL);
 
 			// Request parameters and other properties.
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("email", FleetConstants.EMAIL_ID);
 			jsonObject.put("password", FleetConstants.PASSWORD);
-			
+
 			String json = jsonObject.toString();
-			
+
 			StringEntity entity = new StringEntity(json);
 			httpPost.setEntity(entity);
 			httpPost.setHeader("Accept", "application/json");
 			httpPost.setHeader("Content-type", "application/json");
 
 			// Execute and get the response.
-			try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
+			CloseableHttpResponse response = httpClient.execute(httpPost);
 
-				HttpEntity responseEntity = response.getEntity();
+			logger.info("Status Code		-> " + response.getStatusLine());
 
-				if (responseEntity != null) {
+			HttpEntity responseEntity = response.getEntity();
 
-					// Read the content of the response
-					mResponse = new JSONObject(EntityUtils.toString(responseEntity));
-
-				}
-				return mResponse;
+			if (responseEntity != null) {
+				mResponse = new JSONObject(EntityUtils.toString(responseEntity));
 			}
+			
+			logger.info("End of Login");
+
+			return mResponse;
+
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.WARNING , e.getMessage());
+			logger.log(Level.WARNING , e.getCause().toString());
+			logger.log(Level.WARNING , e.getStackTrace().toString());
 			return null;
 		}
 	}

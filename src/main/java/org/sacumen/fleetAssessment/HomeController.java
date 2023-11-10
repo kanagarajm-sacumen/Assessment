@@ -1,5 +1,7 @@
 package org.sacumen.fleetAssessment;
 
+import org.json.JSONObject;
+
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -7,6 +9,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+@Path("api")
 public class HomeController {
 
 	@POST
@@ -14,7 +17,9 @@ public class HomeController {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String login() {
-		return null;
+		JSONObject jsonObject = new FleetLogin().login();
+		FleetConstants.TOKEN = jsonObject.getString("token");
+		return jsonObject.toString();
 	}
 
 	@GET
