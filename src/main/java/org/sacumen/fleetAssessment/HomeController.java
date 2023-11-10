@@ -35,7 +35,9 @@ public class HomeController {
 	@Path("/software")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String softwareList() {
-		return null;
+		if(FleetConstants.TOKEN.equals("default"))login();
+		JSONObject response = new FetchAllData().fetchAllData(FleetConstants.SOFTWARE_URL);
+		return response.toString();
 	}
 
 	@POST
