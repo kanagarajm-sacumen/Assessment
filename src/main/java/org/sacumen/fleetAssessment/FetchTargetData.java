@@ -1,6 +1,8 @@
 package org.sacumen.fleetAssessment;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -15,6 +17,8 @@ import org.json.JSONObject;
 
 public class FetchTargetData {
 
+	private static final Logger logger = Logger.getLogger(FetchTargetData.class.getName());
+
 	JSONObject mResponse;
 
 	public FetchTargetData() {
@@ -22,13 +26,15 @@ public class FetchTargetData {
 	}
 
 	public JSONObject fetchTargetData(String url) {
-		
-			try{
-			
+
+		try {
+
+			logger.info("Fetch Target Data Started");
+
 			CloseableHttpClient httpClient = HttpClients.createDefault();
-			
+
 			HttpPost httpPost = new HttpPost(FleetConstants.TARGET_URL);
-				
+
 			JSONObject selectedObj = new JSONObject();
 			JSONArray jsonArray = new JSONArray();
 			JSONArray jsonArray2 = new JSONArray();
@@ -53,18 +59,24 @@ public class FetchTargetData {
 			httpPost.setHeader("Authorization", "Bearer " + FleetConstants.TOKEN);
 
 			// Execute and get the response.
-			try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
+			CloseableHttpResponse response = httpClient.execute(httpPost);
 
-				HttpEntity responseEntity = response.getEntity();
+			logger.info("Status Code		-> " + response.getStatusLine());
+			
+			HttpEntity responseEntity = response.getEntity();
 
-				if (responseEntity != null) {
-					// Read the content of the response
-					mResponse = new JSONObject(EntityUtils.toString(responseEntity));
-				}
-
-				return mResponse;
+			if (responseEntity != null) {
+				// Read the content of the response
+				mResponse = new JSONObject(EntityUtils.toString(responseEntity));
 			}
+			
+			logger.info("End of Fetch Target Data");
+			return mResponse;
+			
 		} catch (IOException e) {
+			logger.log(Level.WARNING, e.getMessage());
+			logger.log(Level.WARNING, e.getCause().toString());
+			logger.log(Level.WARNING, e.getStackTrace().toString());
 			return null;
 		}
 	}
