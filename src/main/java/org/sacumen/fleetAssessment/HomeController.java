@@ -26,7 +26,9 @@ public class HomeController {
 	@Path("/host")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String hostList() {
-		return null;
+		if(FleetConstants.TOKEN.equals("default"))login();
+		JSONObject response = new FetchAllData().fetchAllData(FleetConstants.HOST_URL);
+		return response.toString();
 	}
 
 	@GET
