@@ -17,7 +17,9 @@ public class HomeController {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String login() {
-		JSONObject jsonObject = new FleetLogin().login();
+		JSONObject jsonObject = new FleetLogin().login(FleetConstants.LOGIN_URL, FleetConstants.EMAIL_ID,
+				FleetConstants.PASSWORD);
+
 		FleetConstants.TOKEN = jsonObject.getString("token");
 		return jsonObject.toString();
 	}
@@ -26,8 +28,9 @@ public class HomeController {
 	@Path("/host")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String hostList() {
-		if(FleetConstants.TOKEN.equals("default"))login();
-		JSONObject response = new FetchAllData().fetchAllData(FleetConstants.HOST_URL);
+		if (FleetConstants.TOKEN.equals("default"))
+			login();
+		JSONObject response = new FetchAllData().fetchAllData(FleetConstants.HOST_URL, FleetConstants.TOKEN);
 		return response.toString();
 	}
 
@@ -35,8 +38,9 @@ public class HomeController {
 	@Path("/software")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String softwareList() {
-		if(FleetConstants.TOKEN.equals("default"))login();
-		JSONObject response = new FetchAllData().fetchAllData(FleetConstants.SOFTWARE_URL);
+		if (FleetConstants.TOKEN.equals("default"))
+			login();
+		JSONObject response = new FetchAllData().fetchAllData(FleetConstants.SOFTWARE_URL, FleetConstants.TOKEN);
 		return response.toString();
 	}
 
@@ -45,8 +49,9 @@ public class HomeController {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String targetList() {
-		if(FleetConstants.TOKEN.equals("default"))login();
-		JSONObject jsonObject = new FetchTargetData().fetchTargetData(FleetConstants.TARGET_URL);
-		return jsonObject.toString();	
+		if (FleetConstants.TOKEN.equals("default"))
+			login();
+		JSONObject jsonObject = new FetchTargetData().fetchTargetData(FleetConstants.TARGET_URL, FleetConstants.TOKEN);
+		return jsonObject.toString();
 	}
 }

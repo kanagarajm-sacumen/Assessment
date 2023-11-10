@@ -22,7 +22,7 @@ public class FetchAllData {
 		mResponse = new JSONObject();
 	}
 
-	public JSONObject fetchAllData(String url) {
+	public JSONObject fetchAllData(String url, String token) {
 		try {
 			logger.info("Fetching Data Started");
 
@@ -33,7 +33,7 @@ public class FetchAllData {
 			// Request parameters and other properties.
 			httpGet.setHeader("Accept", "application/json");
 			httpGet.setHeader("Content-type", "application/json");
-			httpGet.setHeader("Authorization", "Bearer " + FleetConstants.TOKEN);
+			httpGet.setHeader("Authorization", "Bearer " + token);
 
 			// Execute and get the response.
 			CloseableHttpResponse response = httpClient.execute(httpGet);
@@ -46,15 +46,15 @@ public class FetchAllData {
 				// Read the content of the response
 				mResponse = new JSONObject(EntityUtils.toString(responseEntity));
 			}
-			
+
 			logger.info("End of Fetching Data");
-			
+
 			return mResponse;
-			
+
 		} catch (IOException e) {
-			logger.log(Level.WARNING , e.getMessage());
-			logger.log(Level.WARNING , e.getCause().toString());
-			logger.log(Level.WARNING , e.getStackTrace().toString());
+			logger.log(Level.WARNING, e.getMessage());
+			logger.log(Level.WARNING, e.getCause().toString());
+			logger.log(Level.WARNING, e.getStackTrace().toString());
 			return null;
 		}
 	}

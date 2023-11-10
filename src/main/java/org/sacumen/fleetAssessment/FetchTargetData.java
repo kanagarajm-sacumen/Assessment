@@ -25,7 +25,7 @@ public class FetchTargetData {
 		mResponse = new JSONObject();
 	}
 
-	public JSONObject fetchTargetData(String url) {
+	public JSONObject fetchTargetData(String url , String token) {
 
 		try {
 
@@ -33,7 +33,7 @@ public class FetchTargetData {
 
 			CloseableHttpClient httpClient = HttpClients.createDefault();
 
-			HttpPost httpPost = new HttpPost(FleetConstants.TARGET_URL);
+			HttpPost httpPost = new HttpPost(url);
 
 			JSONObject selectedObj = new JSONObject();
 			JSONArray jsonArray = new JSONArray();
@@ -56,7 +56,7 @@ public class FetchTargetData {
 
 			httpPost.setEntity(entity);
 			httpPost.setHeader("Content-type", "application/json");
-			httpPost.setHeader("Authorization", "Bearer " + FleetConstants.TOKEN);
+			httpPost.setHeader("Authorization", "Bearer " + token);
 
 			// Execute and get the response.
 			CloseableHttpResponse response = httpClient.execute(httpPost);

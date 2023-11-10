@@ -23,19 +23,22 @@ public class FleetLogin {
 		mResponse = new JSONObject();
 	}
 
-	public JSONObject login() {
+	public JSONObject login(String url, String email, String password) {
 		try {
 
 			logger.info("Login Started");
+			logger.info("URL "+url);
+			logger.info("Email "+email);
+			logger.info("Password "+password);
 
 			CloseableHttpClient httpClient = HttpClients.createDefault();
 
-			HttpPost httpPost = new HttpPost(FleetConstants.LOGIN_URL);
+			HttpPost httpPost = new HttpPost(url);
 
 			// Request parameters and other properties.
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("email", FleetConstants.EMAIL_ID);
-			jsonObject.put("password", FleetConstants.PASSWORD);
+			jsonObject.put("email", email);
+			jsonObject.put("password", password);
 
 			String json = jsonObject.toString();
 
@@ -54,15 +57,15 @@ public class FleetLogin {
 			if (responseEntity != null) {
 				mResponse = new JSONObject(EntityUtils.toString(responseEntity));
 			}
-			
+
 			logger.info("End of Login");
 
 			return mResponse;
 
 		} catch (IOException e) {
-			logger.log(Level.WARNING , e.getMessage());
-			logger.log(Level.WARNING , e.getCause().toString());
-			logger.log(Level.WARNING , e.getStackTrace().toString());
+			logger.log(Level.WARNING, e.getMessage());
+			logger.log(Level.WARNING, e.getCause().toString());
+			logger.log(Level.WARNING, e.getStackTrace().toString());
 			return null;
 		}
 	}
