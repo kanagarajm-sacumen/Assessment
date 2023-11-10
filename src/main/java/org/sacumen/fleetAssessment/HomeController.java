@@ -45,6 +45,8 @@ public class HomeController {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String targetList() {
-		return null;
+		if(FleetConstants.TOKEN.equals("default"))login();
+		JSONObject jsonObject = new FetchTargetData().fetchTargetData(FleetConstants.TARGET_URL);
+		return jsonObject.toString();	
 	}
 }
