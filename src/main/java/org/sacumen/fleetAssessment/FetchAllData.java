@@ -1,6 +1,8 @@
 package org.sacumen.fleetAssessment;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -11,6 +13,9 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 public class FetchAllData {
+
+	private static final Logger logger = Logger.getLogger(FetchAllData.class.getName());
+
 	JSONObject mResponse;
 
 	public FetchAllData() {
@@ -19,8 +24,10 @@ public class FetchAllData {
 
 	public JSONObject fetchAllData(String url) {
 		try {
+			logger.info("Fetching Data Started");
+
 			CloseableHttpClient httpClient = HttpClients.createDefault();
-			
+
 			HttpGet httpGet = new HttpGet(url);
 
 			// Request parameters and other properties.
@@ -31,15 +38,24 @@ public class FetchAllData {
 			// Execute and get the response.
 			CloseableHttpResponse response = httpClient.execute(httpGet);
 
-				HttpEntity responseEntity = response.getEntity();
+			logger.info("Status Code		-> " + response.getStatusLine());
 
-				if (responseEntity != null) {
-					// Read the content of the response
-					mResponse = new JSONObject(EntityUtils.toString(responseEntity));
-				}
-				return mResponse;
+			HttpEntity responseEntity = response.getEntity();
+
+			if (responseEntity != null) {
+				// Read the content of the response
+				mResponse = new JSONObject(EntityUtils.toString(responseEntity));
+			}
+			
+			logger.info("End of Fetching Data");
+			
+			return mResponse;
+			
 		} catch (IOException e) {
+			logger.log(Level.WARNING , e.getMessage());
+			logger.log(Level.WARNING , e.getCause().toString());
+			logger.log(Level.WARNING , e.getStackTrace().toString());
 			return null;
-		}	
+		}
 	}
 }
